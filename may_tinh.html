@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máy Tính Đơn Giản</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e0e5ec; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #ffffff;
+            width: 320px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #display {
+            background-color: #f4f6f8;
+            color: #333333;
+            font-size: 40px;
+            text-align: right;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            min-height: 48px;
+            word-wrap: break-word;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            border: none;
+            outline: none;
+            padding: 20px;
+            font-size: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #f0f3f6;
+            color: #333;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        
+        button:hover {
+            background-color: #e2e6ea;
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .operator {
+            background-color: #ffe0b2; 
+            color: #e65100;
+            font-weight: bold;
+        }
+        .operator:hover { background-color: #ffcc80; }
+
+        .clear {
+            background-color: #ffcdd2; 
+            color: #c62828;
+            font-weight: bold;
+            grid-column: span 3; 
+        }
+        .clear:hover { background-color: #ef9a9a; }
+
+        .equal {
+            background-color: #bbdefb; 
+            color: #1565c0;
+            font-weight: bold;
+        }
+        .equal:hover { background-color: #90caf9; }
+
+        .zero {
+            grid-column: span 2; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div id="display">0</div>
+        <div class="keypad">
+      
+            <button class="clear">C</button>
+            <button class="operator">/</button>
+            
+     
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button class="operator">*</button>
+            
+      
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button class="operator">-</button>
+            
+          
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button class="operator">+</button>
+            
+         
+            <button class="zero">0</button>
+            <button>.</button>
+            <button class="equal">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        const buttons = document.querySelectorAll('button');
+
+        buttons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const value = this.innerText;
+                let hienThi = display.innerText;
+
+                if (value === 'C') {
+                    display.innerText = '0';
+                } 
+                else if (value === '=') {
+                    try {
+                        const phanTuCuoi = hienThi.slice(-1);
+                        const cacDauPhepTinh = ['+', '-', '*', '/'];
+
+                        if (cacDauPhepTinh.includes(phanTuCuoi) || phanTuCuoi === '.') {
+                            hienThi = hienThi.slice(0, -1);
+                        }
+
+                       
+                        if (hienThi === '') {
+                             display.innerText = '0';
+                             return;
+                        }
+
+                        display.innerText = eval(hienThi);
+                    } catch (error) {
+                   
+                        display.innerText = 'Lỗi';
+                    }
+                } 
+                else {
+                     const cacDauPhepTinh = ['+', '-', '*', '/'];
+                     const phanTuCuoi = hienThi.slice(-1);
+
+                     if (hienThi === 'Lỗi') {
+                         display.innerText = (cacDauPhepTinh.includes(value) || value === '.') ? '0' + value : value;
+                         return;
+                     }
+
+                    if (cacDauPhepTinh.includes(value) && cacDauPhepTinh.includes(phanTuCuoi)) {
+                        display.innerText = hienThi.slice(0, -1) + value;
+                        return;
+                    }
+
+                    if (value === '.') {
+                         const cacSo = hienThi.split(/[\+\-\*\/]/);
+                         const soCuoiCung = cacSo[cacSo.length - 1];
+                         
+                         if (soCuoiCung.includes('.')) {
+                             return; 
+                         }
+                    }
+
+                    if (hienThi === '0' && value !== '.' && !cacDauPhepTinh.includes(value)) {
+                        display.innerText = value;
+                    } else {
+                        display.innerText += value;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
