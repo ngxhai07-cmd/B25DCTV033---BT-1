@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portfolio – Nguyễn Xuân Hải</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Fraunces:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+         
+            --bg: #f8fafc; 
+            --surface: #ffffff; 
+            --text: #0f172a; 
+            --muted: #64748b;
+            --accent: #2563eb; 
+            --accent-2: #eff6ff; 
+            --border: #e2e8f0; 
+            --err: #ef4444; 
+            --ok: #10b981;
+            --glass: rgba(255, 255, 255, 0.85);
+        }
+        :root[data-theme="dark"] {
+           
+            --bg: #0f172a; 
+            --surface: #1e293b; 
+            --text: #f8fafc; 
+            --muted: #94a3b8;
+            --accent: #3b82f6; 
+            --accent-2: #1e3a8a; 
+            --border: #334155; 
+            --err: #f87171; 
+            --ok: #34d399;
+            --glass: rgba(15, 23, 42, 0.85);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        body { font-family: 'Be Vietnam Pro', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; transition: background 0.4s ease, color 0.4s ease; }
+        h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.2; font-weight: 600; }
+        a { color: inherit; text-decoration: none; }
+        :focus-visible { outline: 2px solid var(--muted); outline-offset: 3px; }
+
+        #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; background: var(--accent); z-index: 100; transition: width 0.1s; }
+
+        
+        .header { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 5%; background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+        .logo { font-family: 'Fraunces', serif; font-weight: 800; font-size: 1.5rem; color: var(--accent); letter-spacing: -0.5px; }
+        .nav { display: flex; gap: 32px; margin-left: auto; }
+        .nav a { padding: 4px 0; border-bottom: 2px solid transparent; color: var(--muted); transition: 0.3s; font-weight: 500; font-size: 0.95rem; }
+        .nav a:hover, .nav a.active { border-color: var(--accent); color: var(--accent); }
+        .menu-btn { display: none; }
+        .menu-btn, .theme-btn { background: transparent; border: 1px solid var(--border); color: var(--text); border-radius: 50%; width: 42px; height: 42px; font-size: 1.1rem; cursor: pointer; transition: 0.3s; display: grid; place-items: center; }
+        .menu-btn:hover, .theme-btn:hover { background: var(--accent-2); color: var(--accent); border-color: var(--accent-2); }
+
+    
+        .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 80px 5%; max-width: 1100px; margin: auto; }
+        .hello { color: var(--muted); font-size: 1.1rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+        .hero h1 { font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 800; margin: 0 0 16px; letter-spacing: -1.5px; color: var(--text); }
+        .typing { font-size: 1.2rem; margin-bottom: 36px; color: var(--muted); }
+        #typed { font-family: 'Consolas', 'Courier New', monospace; color: var(--accent); background: var(--accent-2); padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+        .cursor { animation: blink 1s steps(1) infinite; color: var(--accent); font-weight: bold; margin-left: 2px; }
+        @keyframes blink { 50% { opacity: 0; } }
+        .btn { align-self: flex-start; display: inline-block; background: var(--accent); color: #ffffff; border: 1px solid var(--accent); padding: 14px 32px; border-radius: 30px; font: 500 1rem 'Be Vietnam Pro', sans-serif; cursor: pointer; transition: 0.3s ease; box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25); }
+        .btn:hover { background: transparent; color: var(--accent); transform: translateY(-2px); box-shadow: none; }
+
+    
+        .section { max-width: 1100px; margin: auto; padding: 90px 5%; }
+        .section h2 { font-size: 2.2rem; margin-bottom: 40px; letter-spacing: -0.5px; position: relative; display: inline-block; }
+        .section h2::after { content: ""; position: absolute; bottom: -8px; left: 0; width: 40%; height: 3px; background: var(--accent); border-radius: 2px;}
+        .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .reveal.show { opacity: 1; transform: none; }
+
+        .about { display: flex; gap: 48px; align-items: center; }
+        .avatar { flex: 0 0 140px; height: 140px; border-radius: 50%; background: var(--accent); color: #ffffff; display: grid; place-items: center; font: 600 3rem 'Fraunces', serif; border: 4px solid var(--accent-2); }
+        .about p { max-width: 60ch; color: var(--muted); font-size: 1.05rem; }
+
+        .skills { list-style: none; display: flex; flex-wrap: wrap; gap: 14px; }
+        .skills li { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 10px 24px; border-radius: 30px; font-size: 0.95rem; transition: 0.3s; }
+        .skills li:hover { border-color: var(--accent); color: #ffffff; background: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+
+      
+        .search { width: 100%; padding: 14px 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: inherit; margin-bottom: 20px; transition: 0.3s; }
+        .search:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-2); }
+        .tags { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+        .tag { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 6px 18px; border-radius: 30px; font: 500 0.95rem inherit; cursor: pointer; transition: 0.3s; }
+        .tag:hover { border-color: var(--accent); color: var(--accent); }
+        .tag.active { background: var(--accent); color: #ffffff; border-color: var(--accent); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 32px 24px; transition: transform 0.4s ease, box-shadow 0.4s ease; display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.15); border-color: var(--accent-2); }
+        .card h3 { font-size: 1.25rem; margin-bottom: 12px; }
+        .card p { color: var(--muted); margin-bottom: 20px; font-size: 0.95rem; flex-grow: 1; }
+        .chip { display: inline-block; background: var(--accent-2); border: 1px solid transparent; color: var(--accent); padding: 4px 14px; border-radius: 20px; font-size: 0.75rem; margin-right: 8px; font-weight: 600; }
+        .card.hide { display: none; }
+        .empty { color: var(--muted); padding: 20px 0; font-style: italic; }
+
+     
+        .form { display: grid; gap: 24px; max-width: 600px; }
+        .form label { display: grid; gap: 8px; font-weight: 500; font-size: 0.95rem; color: var(--text); }
+        .form input, .form textarea { padding: 14px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text); font: 400 1rem 'Be Vietnam Pro', sans-serif; transition: 0.3s; }
+        .form input:focus, .form textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-2); }
+        .form .invalid { border-color: var(--err); box-shadow: none; }
+        .err { color: var(--err); font-weight: 400; font-size: 0.85rem; min-height: 1em; margin-top: -4px; }
+        .count { color: var(--muted); font-weight: 400; font-size: 0.85rem; text-align: right; }
+        .ok { color: var(--ok); font-weight: 500; padding: 12px; border: 1px solid var(--ok); border-radius: 8px; text-align: center; background: rgba(16, 185, 129, 0.1); }
+
+    
+        .footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 32px 5%; border-top: 1px solid var(--border); background: var(--bg); color: var(--muted); font-size: 0.9rem; }
+        .top-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 1.2rem; cursor: pointer; transition: 0.3s; display: grid; place-items: center; }
+        .top-btn:hover { background: var(--accent); color: #ffffff; transform: translateY(-4px); border-color: var(--accent); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+    
+        @media (max-width: 1024px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+            .nav { gap: 20px; }
+            .section { padding: 70px 5%; }
+        }
+        @media (max-width: 640px) {
+            .menu-btn { display: grid; margin-left: auto; }
+            .nav { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 0; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+            .nav.open { display: flex; }
+            .nav a { padding: 16px 5%; border-bottom: none; color: var(--text); }
+            .nav a:hover { background: var(--accent-2); color: var(--accent); }
+            .grid { grid-template-columns: 1fr; }
+            .about { flex-direction: column; text-align: center; gap: 32px; }
+            .hero { text-align: center; align-items: center; }
+            .section h2::after { left: 30%; width: 40%; }
+            .footer { flex-direction: column; text-align: center; gap: 24px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+            .reveal { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="progress"></div>
+
+    <header class="header">
+        <a href="#home" class="logo">XH.dev</a>
+        <button id="menuBtn" class="menu-btn" aria-label="Mở menu" aria-expanded="false">☰</button>
+        <nav id="nav" class="nav">
+            <a href="#about">Giới thiệu</a>
+            <a href="#skills">Kỹ năng</a>
+            <a href="#projects">Dự án</a>
+            <a href="#contact">Liên hệ</a>
+        </nav>
+        <button id="themeBtn" class="theme-btn" aria-label="Đổi giao diện sáng/tối">🌙</button>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+           
+            <p class="hello" id="greeting">Xin chào, mình là</p>
+            <h1>Nguyễn Xuân Hải</h1>
+            <p class="typing">Sinh viên <span id="typed"></span><span class="cursor">|</span></p>
+            <a href="#projects" class="btn">Xem dự án</a>
+        </section>
+
+        <section id="about" class="section reveal">
+            <h2>Giới thiệu</h2>
+            <div class="about">
+                <div class="avatar"></div>
+                <p>Mình là sinh viên năm 2 ngành AIoT tại Học viện Công nghệ Bưu chính Viễn thông(PTIT).</p>
+            </div>
+        </section>
+
+        <section id="skills" class="section reveal">
+            <h2>Kỹ năng</h2>
+            <ul class="skills">
+                <li>HTML5</li><li>CSS3</li><li>JavaScript</li><li>Git &amp; GitHub</li><li>Responsive Design</li><li>Python cơ bản</li>
+            </ul>
+        </section>
+
+        <section id="projects" class="section reveal">
+            <h2>Dự án</h2>
+            <input id="search" class="search" type="search" placeholder="Tìm dự án theo từ khóa…" aria-label="Tìm dự án">
+            <div class="tags" id="tags">
+                <button class="tag active" data-tag="all">Tất cả</button>
+                <button class="tag" data-tag="web">Web</button>
+                <button class="tag" data-tag="js">JavaScript</button>
+                <button class="tag" data-tag="python">Python</button>
+            </div>
+            <div class="grid" id="grid">
+                <article class="card" data-tags="web">
+                    <h3>Trang giới thiệu quán cà phê</h3>
+                    <p>Website tĩnh giới thiệu thực đơn và địa chỉ quán, bố cục bằng Grid.</p>
+                    <span class="chip">HTML</span><span class="chip">CSS</span>
+                </article>
+                <article class="card" data-tags="web js">
+                    <h3>Ứng dụng danh sách việc cần làm</h3>
+                    <p>Thêm, xóa, đánh dấu hoàn thành công việc và lưu lại trong trình duyệt.</p>
+                    <span class="chip">JavaScript</span><span class="chip">LocalStorage</span>
+                </article>
+                <article class="card" data-tags="python">
+                    <h3>Quản lý điểm sinh viên</h3>
+                    <p>Chương trình dòng lệnh nhập điểm, tính điểm trung bình và xếp loại.</p>
+                    <span class="chip">Python</span>
+                </article>
+                <article class="card" data-tags="web js">
+                    <h3>Máy tính bỏ túi</h3>
+                    <p>Máy tính có phép toán cơ bản, hỗ trợ bàn phím và giao diện tối.</p>
+                    <span class="chip">JavaScript</span><span class="chip">CSS</span>
+                </article>
+            </div>
+            <p id="empty" class="empty" hidden>Không tìm thấy dự án phù hợp. Hãy thử từ khóa khác.</p>
+        </section>
+
+        <section id="contact" class="section reveal">
+            <h2>Liên hệ</h2>
+            <form id="form" class="form" novalidate>
+                <label>Họ tên
+                    <input type="text" id="name" placeholder="Ví dụ: Trần Văn B">
+                    <small class="err" id="nameErr"></small>
+                </label>
+                <label>Email
+                    <input type="email" id="email" placeholder="ban@example.com">
+                    <small class="err" id="emailErr"></small>
+                </label>
+                <label>Số điện thoại
+                    <input type="tel" id="phone" placeholder="0901234567">
+                    <small class="err" id="phoneErr"></small>
+                </label>
+                <label>Lời nhắn
+                    <textarea id="msg" rows="4" maxlength="200" placeholder="Bạn muốn nói gì với mình?"></textarea>
+                    <small class="count"><span id="count">0</span>/200 ký tự</small>
+                    <small class="err" id="msgErr"></small>
+                </label>
+                <button type="submit" class="btn">Gửi lời nhắn</button>
+                <p id="ok" class="ok" hidden>Đã gửi lời nhắn. Cảm ơn bạn!</p>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© <span id="year"></span> Nguyễn Xuân Hải. Bài thực hành 01 – Lập trình web.</p>
+        <button id="topBtn" class="top-btn" aria-label="Lên đầu trang">↑</button>
+    </footer>
+
+    <script>
+        const $ = (s) => document.querySelector(s);
+        const $$ = (s) => [...document.querySelectorAll(s)];
+
+    
+        const hour = new Date().getHours();
+        let greetingText = 'Xin chào, mình là';
+        if (hour < 12) {
+            greetingText = 'Chào buổi sáng, mình là';
+        } else if (hour < 18) {
+            greetingText = 'Chào buổi chiều, mình là';
+        } else {
+            greetingText = 'Chào buổi tối, mình là';
+        }
+        $('#greeting').innerText = greetingText;
+
+    
+        const menuBtn = $('#menuBtn'), nav = $('#nav');
+        menuBtn.addEventListener('click', () => {
+            const open = nav.classList.toggle('open');
+            menuBtn.setAttribute('aria-expanded', open);
+        });
+        nav.addEventListener('click', (e) => { if (e.target.tagName === 'A') nav.classList.remove('open'); });
+
+
+        const root = document.documentElement, themeBtn = $('#themeBtn');
+        function setTheme(t) {
+            root.dataset.theme = t;
+            themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+            try { localStorage.setItem('theme', t); } catch (e) {}
+        }
+        let saved = null;
+        try { saved = localStorage.getItem('theme'); } catch (e) {}
+        setTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+        themeBtn.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+      
+        $('#year').textContent = new Date().getFullYear();
+
+      
+        const words = ['Công nghệ thông tin', 'yêu thích Front-end', 'đam mê lập trình web'];
+        let w = 0, c = 0, del = false;
+        function type() {
+            const word = words[w];
+            $('#typed').textContent = word.slice(0, c);
+            if (!del && c === word.length) { del = true; return setTimeout(type, 1400); }
+            if (del && c === 0) { del = false; w = (w + 1) % words.length; }
+            c += del ? -1 : 1;
+            setTimeout(type, del ? 40 : 90);
+        }
+        type();
+
+     
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('show'); io.unobserve(en.target); } });
+        }, { threshold: 0.15 });
+        $$('.reveal').forEach((el) => io.observe(el));
+
+        /* 7. Lọc / tìm kiếm dự án theo từ khóa hoặc tag */
+        let activeTag = 'all';
+        function filterProjects() {
+            const q = $('#search').value.trim().toLowerCase();
+            let shown = 0;
+            $$('.card').forEach((card) => {
+                const okTag = activeTag === 'all' || card.dataset.tags.split(' ').includes(activeTag);
+                const okText = card.textContent.toLowerCase().includes(q);
+                card.classList.toggle('hide', !(okTag && okText));
+                if (okTag && okText) shown++;
+            });
+            $('#empty').hidden = shown > 0;
+        }
+        $('#search').addEventListener('input', filterProjects);
+        $('#tags').addEventListener('click', (e) => {
+            const b = e.target.closest('.tag'); if (!b) return;
+            $$('.tag').forEach((t) => t.classList.remove('active'));
+            b.classList.add('active'); activeTag = b.dataset.tag; filterProjects();
+        });
+
+   
+        $('#msg').addEventListener('input', (e) => { $('#count').textContent = e.target.value.length; });
+
+ 
+        function setErr(id, inputId, text) {
+            $('#' + id).textContent = text;
+            $('#' + inputId).classList.toggle('invalid', !!text);
+            return !text;
+        }
+        $('#form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = $('#name').value.trim(), email = $('#email').value.trim();
+            const phone = $('#phone').value.trim(), msg = $('#msg').value.trim();
+            let ok = true;
+            ok = setErr('nameErr', 'name', !name ? 'Vui lòng nhập họ tên.' : name.length < 2 ? 'Họ tên cần ít nhất 2 ký tự.' : /\d/.test(name) ? 'Họ tên không được chứa số.' : '') && ok;
+            ok = setErr('emailErr', 'email', !email ? 'Vui lòng nhập email.' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? 'Email chưa đúng định dạng.' : '') && ok;
+            ok = setErr('phoneErr', 'phone', phone && !/^0\d{9}$/.test(phone) ? 'Số điện thoại gồm 10 số, bắt đầu bằng 0.' : '') && ok;
+            ok = setErr('msgErr', 'msg', !msg ? 'Vui lòng nhập lời nhắn.' : msg.length < 10 ? 'Lời nhắn cần ít nhất 10 ký tự.' : '') && ok;
+            $('#ok').hidden = !ok;
+            if (ok) { e.target.reset(); $('#count').textContent = 0; }
+        });
+
+        const sections = $$('main section[id]'), links = $$('.nav a');
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement;
+            $('#progress').style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+            let cur = '';
+            sections.forEach((s) => { if (scrollY >= s.offsetTop - 120) cur = s.id; });
+            links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+        });
+        $('#topBtn').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    </script>
+</body>
+</html>
